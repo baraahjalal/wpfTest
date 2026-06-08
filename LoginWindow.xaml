@@ -1,0 +1,669 @@
+<Window x:Class="InventoryMS.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="IMS — Inventory Management System"
+        Height="620" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+
+        <!-- Glowing Cyan Button -->
+        <Style x:Key="GlowButton" TargetType="Button">
+            <Setter Property="Background"     Value="#00D4FF"/>
+            <Setter Property="Foreground"     Value="#0A0E1A"/>
+            <Setter Property="FontFamily"     Value="Segoe UI Semibold"/>
+            <Setter Property="FontSize"       Value="14"/>
+            <Setter Property="FontWeight"     Value="Bold"/>
+            <Setter Property="Cursor"         Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height"         Value="48"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- Glow shadow -->
+                            <Border CornerRadius="10"
+                                    Background="#3000D4FF"
+                                    Margin="-4"
+                                    x:Name="GlowLayer"/>
+                            <Border x:Name="Bd"
+                                    CornerRadius="10"
+                                    Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd"     Property="Background" Value="#33E8FF"/>
+                                <Setter TargetName="GlowLayer" Property="Background" Value="#6000D4FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd"     Property="Background" Value="#0099BB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ghost / outline Button -->
+        <Style x:Key="GhostButton" TargetType="Button">
+            <Setter Property="Background"     Value="Transparent"/>
+            <Setter Property="Foreground"     Value="#00D4FF"/>
+            <Setter Property="FontFamily"     Value="Segoe UI"/>
+            <Setter Property="FontSize"       Value="12"/>
+            <Setter Property="Cursor"         Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock x:Name="Tb"
+                                   Text="{TemplateBinding Content}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   FontFamily="{TemplateBinding FontFamily}"
+                                   TextDecorations="Underline"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Tb" Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Input field style -->
+        <Style x:Key="TechInput" TargetType="TextBox">
+            <Setter Property="Background"       Value="#0D1526"/>
+            <Setter Property="Foreground"       Value="#E0F4FF"/>
+            <Setter Property="CaretBrush"       Value="#00D4FF"/>
+            <Setter Property="FontFamily"       Value="Consolas"/>
+            <Setter Property="FontSize"         Value="14"/>
+            <Setter Property="BorderThickness"  Value="0,0,0,2"/>
+            <Setter Property="BorderBrush"      Value="#1E3A5F"/>
+            <Setter Property="Padding"          Value="12,10"/>
+            <Setter Property="Height"           Value="46"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8,8,0,0">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#00D4FF"/>
+                                <Setter TargetName="Bd" Property="Background"  Value="#101E35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- PasswordBox style -->
+        <Style x:Key="TechPassword" TargetType="PasswordBox">
+            <Setter Property="Background"       Value="#0D1526"/>
+            <Setter Property="Foreground"       Value="#E0F4FF"/>
+            <Setter Property="CaretBrush"       Value="#00D4FF"/>
+            <Setter Property="FontFamily"       Value="Consolas"/>
+            <Setter Property="FontSize"         Value="14"/>
+            <Setter Property="BorderThickness"  Value="0,0,0,2"/>
+            <Setter Property="BorderBrush"      Value="#1E3A5F"/>
+            <Setter Property="Padding"          Value="12,10"/>
+            <Setter Property="Height"           Value="46"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8,8,0,0">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#00D4FF"/>
+                                <Setter TargetName="Bd" Property="Background"  Value="#101E35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- CheckBox style -->
+        <Style x:Key="TechCheck" TargetType="CheckBox">
+            <Setter Property="Foreground"  Value="#8BACC8"/>
+            <Setter Property="FontFamily"  Value="Segoe UI"/>
+            <Setter Property="FontSize"    Value="12"/>
+            <Setter Property="Cursor"      Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border x:Name="Box"
+                                    Width="18" Height="18"
+                                    CornerRadius="4"
+                                    BorderBrush="#1E3A5F"
+                                    BorderThickness="2"
+                                    Background="Transparent"
+                                    Margin="0,0,8,0">
+                                <TextBlock x:Name="Check"
+                                           Text="✔"
+                                           FontSize="11"
+                                           Foreground="#00D4FF"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Box"   Property="BorderBrush" Value="#00D4FF"/>
+                                <Setter TargetName="Box"   Property="Background"  Value="#0A1F35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- ══════════════  ROOT  ══════════════ -->
+    <Border CornerRadius="16" ClipToBounds="True">
+        <Grid>
+
+            <!-- ── LEFT PANEL : decorative tech art ── -->
+            <Grid Width="420" HorizontalAlignment="Left">
+
+                <!-- Deep navy background -->
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#060C1A" Offset="0"/>
+                            <GradientStop Color="#0A1628" Offset="0.6"/>
+                            <GradientStop Color="#071220" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!-- Subtle radial glow top-right -->
+                <Ellipse Width="500" Height="500"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Top"
+                         Margin="0,-150,-100,0">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#1800D4FF" Offset="0"/>
+                            <GradientStop Color="#00000000" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <!-- Grid dot pattern (SVG-style via ItemsControl) -->
+                <Canvas ClipToBounds="True" Opacity="0.18">
+                    <!-- Row 1 -->
+                    <Ellipse Canvas.Left="30"  Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="40"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <!-- Row 2 -->
+                    <Ellipse Canvas.Left="30"  Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="90"  Width="3" Height="3" Fill="#00D4FF"/>
+                    <!-- Row 3 -->
+                    <Ellipse Canvas.Left="30"  Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="140" Width="3" Height="3" Fill="#00D4FF"/>
+                    <!-- Row 4 -->
+                    <Ellipse Canvas.Left="30"  Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="190" Width="3" Height="3" Fill="#00D4FF"/>
+                    <!-- rows 5-9 -->
+                    <Ellipse Canvas.Left="30"  Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="240" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="30"  Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="290" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="30"  Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="340" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="30"  Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="390" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="30"  Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="440" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="30"  Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="490" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="30"  Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="80"  Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="130" Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="180" Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="230" Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="280" Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="330" Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="380" Canvas.Top="540" Width="3" Height="3" Fill="#00D4FF"/>
+                </Canvas>
+
+                <!-- Big hexagon / CPU icon drawn with paths -->
+                <Canvas HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Width="240" Height="240"
+                        Margin="0,-30,0,0">
+
+                    <!-- Outer ring -->
+                    <Ellipse Width="200" Height="200"
+                             Canvas.Left="20" Canvas.Top="20"
+                             Stroke="#00D4FF" StrokeThickness="1.5"
+                             StrokeDashArray="4 3"
+                             Opacity="0.35"/>
+
+                    <!-- Middle ring -->
+                    <Ellipse Width="150" Height="150"
+                             Canvas.Left="45" Canvas.Top="45"
+                             Stroke="#00D4FF" StrokeThickness="1"
+                             Opacity="0.5"/>
+
+                    <!-- CPU core square -->
+                    <Border Canvas.Left="72" Canvas.Top="72"
+                            Width="96" Height="96"
+                            BorderBrush="#00D4FF"
+                            BorderThickness="2"
+                            CornerRadius="6">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#0A1E38" Offset="0"/>
+                                <GradientStop Color="#061426" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <!-- inner grid lines -->
+                            <Line X1="32" Y1="0" X2="32" Y2="96"
+                                  Stroke="#0E3050" StrokeThickness="1"/>
+                            <Line X1="64" Y1="0" X2="64" Y2="96"
+                                  Stroke="#0E3050" StrokeThickness="1"/>
+                            <Line X1="0" Y1="32" X2="96" Y2="32"
+                                  Stroke="#0E3050" StrokeThickness="1"/>
+                            <Line X1="0" Y1="64" X2="96" Y2="64"
+                                  Stroke="#0E3050" StrokeThickness="1"/>
+                            <!-- chip label -->
+                            <TextBlock Text="IMS"
+                                       Foreground="#00D4FF"
+                                       FontFamily="Consolas"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Opacity="0.9"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- CPU pin lines -->
+                    <!-- Top pins -->
+                    <Line X1="96"  Y1="72" X2="96"  Y2="40" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="120" Y1="72" X2="120" Y2="40" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="144" Y1="72" X2="144" Y2="40" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <!-- Bottom pins -->
+                    <Line X1="96"  Y1="168" X2="96"  Y2="200" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="120" Y1="168" X2="120" Y2="200" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="144" Y1="168" X2="144" Y2="200" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <!-- Left pins -->
+                    <Line X1="72" Y1="96"  X2="40" Y2="96"  Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="72" Y1="120" X2="40" Y2="120" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="72" Y1="144" X2="40" Y2="144" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <!-- Right pins -->
+                    <Line X1="168" Y1="96"  X2="200" Y2="96"  Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="168" Y1="120" X2="200" Y2="120" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+                    <Line X1="168" Y1="144" X2="200" Y2="144" Stroke="#00D4FF" StrokeThickness="1.5" Opacity="0.6"/>
+
+                    <!-- Pin dots -->
+                    <Ellipse Canvas.Left="92"  Canvas.Top="36"  Width="8" Height="8" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="116" Canvas.Top="36"  Width="8" Height="8" Fill="#00D4FF" Opacity="0.6"/>
+                    <Ellipse Canvas.Left="140" Canvas.Top="36"  Width="8" Height="8" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="92"  Canvas.Top="196" Width="8" Height="8" Fill="#00D4FF" Opacity="0.6"/>
+                    <Ellipse Canvas.Left="116" Canvas.Top="196" Width="8" Height="8" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="140" Canvas.Top="196" Width="8" Height="8" Fill="#00D4FF" Opacity="0.6"/>
+                    <Ellipse Canvas.Left="36"  Canvas.Top="92"  Width="8" Height="8" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="36"  Canvas.Top="116" Width="8" Height="8" Fill="#00D4FF" Opacity="0.6"/>
+                    <Ellipse Canvas.Left="36"  Canvas.Top="140" Width="8" Height="8" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="196" Canvas.Top="92"  Width="8" Height="8" Fill="#00D4FF" Opacity="0.6"/>
+                    <Ellipse Canvas.Left="196" Canvas.Top="116" Width="8" Height="8" Fill="#00D4FF"/>
+                    <Ellipse Canvas.Left="196" Canvas.Top="140" Width="8" Height="8" Fill="#00D4FF" Opacity="0.6"/>
+                </Canvas>
+
+                <!-- Tagline below illustration -->
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                            Margin="0,0,0,50">
+                    <TextBlock Text="INVENTORY MANAGEMENT SYSTEM"
+                               Foreground="#00D4FF"
+                               FontFamily="Consolas"
+                               FontSize="11"
+                               FontWeight="Bold"
+                               LetterSpacing="3"
+                               HorizontalAlignment="Center"
+                               Opacity="0.8"/>
+                    <TextBlock Text="Tech Asset Control Platform"
+                               Foreground="#4A7FA0"
+                               FontFamily="Segoe UI"
+                               FontSize="12"
+                               HorizontalAlignment="Center"
+                               Margin="0,6,0,0"/>
+                    <!-- Status dots -->
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,14,0,0">
+                        <Ellipse Width="8" Height="8" Fill="#00D4FF" Margin="4,0"/>
+                        <Ellipse Width="8" Height="8" Fill="#00D4FF" Margin="4,0" Opacity="0.5"/>
+                        <Ellipse Width="8" Height="8" Fill="#00D4FF" Margin="4,0" Opacity="0.25"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Vertical cyan divider -->
+                <Rectangle Width="1" HorizontalAlignment="Right" Fill="#00D4FF" Opacity="0.2"/>
+            </Grid>
+
+            <!-- ── RIGHT PANEL : login form ── -->
+            <Grid Margin="420,0,0,0">
+
+                <!-- Dark card background -->
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#080D1C" Offset="0"/>
+                            <GradientStop Color="#0C1325" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!-- Subtle bottom glow -->
+                <Ellipse Width="400" Height="200"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Bottom"
+                         Margin="0,0,0,-100"
+                         Opacity="0.12">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#00D4FF" Offset="0"/>
+                            <GradientStop Color="#00000000" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <!-- Close button -->
+                <Button Content="✕"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,16,20,0"
+                        Width="32" Height="32"
+                        Foreground="#4A7FA0"
+                        FontSize="14"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="BtnClose_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" CornerRadius="6"
+                                    Background="Transparent"
+                                    Width="32" Height="32">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#1A2A40"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Form content -->
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Width="320">
+
+                    <!-- Logo badge -->
+                    <Border Width="60" Height="60"
+                            CornerRadius="14"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,24">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#0E2C4A" Offset="0"/>
+                                <GradientStop Color="#082038" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Effect>
+                            <DropShadowEffect Color="#00D4FF" BlurRadius="18"
+                                              ShadowDepth="0" Opacity="0.45"/>
+                        </Border.Effect>
+                        <TextBlock Text="⬡"
+                                   FontSize="32"
+                                   Foreground="#00D4FF"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Heading -->
+                    <TextBlock Text="Welcome Back"
+                               Foreground="#E8F4FF"
+                               FontFamily="Segoe UI Light"
+                               FontSize="26"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Sign in to your account"
+                               Foreground="#3D6080"
+                               FontFamily="Segoe UI"
+                               FontSize="13"
+                               HorizontalAlignment="Center"
+                               Margin="0,6,0,36"/>
+
+                    <!-- Username -->
+                    <TextBlock Text="USERNAME"
+                               Foreground="#3D6080"
+                               FontFamily="Consolas"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               LetterSpacing="2"
+                               Margin="0,0,0,6"/>
+                    <Grid>
+                        <TextBox x:Name="TxtUsername"
+                                 Style="{StaticResource TechInput}"
+                                 Padding="40,10,12,10"/>
+                        <!-- icon -->
+                        <TextBlock Text="👤"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Opacity="0.5"
+                                   IsHitTestVisible="False"/>
+                    </Grid>
+
+                    <!-- Password -->
+                    <TextBlock Text="PASSWORD"
+                               Foreground="#3D6080"
+                               FontFamily="Consolas"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               LetterSpacing="2"
+                               Margin="0,18,0,6"/>
+                    <Grid>
+                        <PasswordBox x:Name="PbxPassword"
+                                     Style="{StaticResource TechPassword}"
+                                     Padding="40,10,12,10"/>
+                        <TextBlock Text="🔒"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Opacity="0.5"
+                                   IsHitTestVisible="False"/>
+                    </Grid>
+
+                    <!-- Remember me + Forgot -->
+                    <Grid Margin="0,14,0,0">
+                        <CheckBox x:Name="ChkRemember"
+                                  Content="Remember me"
+                                  Style="{StaticResource TechCheck}"
+                                  HorizontalAlignment="Left"/>
+                        <Button Content="Forgot password?"
+                                Style="{StaticResource GhostButton}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Click="BtnForgot_Click"/>
+                    </Grid>
+
+                    <!-- Error message area -->
+                    <Border x:Name="PanelError"
+                            Background="#1A0A0A"
+                            BorderBrush="#FF3B3B"
+                            BorderThickness="0,0,0,2"
+                            CornerRadius="8,8,0,0"
+                            Padding="12,8"
+                            Margin="0,16,0,0"
+                            Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚠ " Foreground="#FF5555" FontSize="13"/>
+                            <TextBlock x:Name="TblError"
+                                       Text="Invalid credentials. Try again."
+                                       Foreground="#FF7777"
+                                       FontFamily="Segoe UI"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Sign-in button -->
+                    <Button Content="SIGN IN"
+                            Style="{StaticResource GlowButton}"
+                            Margin="0,24,0,0"
+                            Click="BtnLogin_Click">
+                        <Button.Effect>
+                            <DropShadowEffect Color="#00D4FF" BlurRadius="20"
+                                              ShadowDepth="0" Opacity="0.4"/>
+                        </Button.Effect>
+                    </Button>
+
+                    <!-- Divider -->
+                    <Grid Margin="0,28,0,20">
+                        <Rectangle Height="1" Fill="#0E2A40" VerticalAlignment="Center"/>
+                        <TextBlock Text="SECURE ACCESS"
+                                   Background="#0C1325"
+                                   Foreground="#1E3A5F"
+                                   FontFamily="Consolas"
+                                   FontSize="10"
+                                   Padding="10,0"
+                                   HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Lock-out countdown (hidden by default) -->
+                    <Border x:Name="PanelLockout"
+                            Background="#0F0A20"
+                            BorderBrush="#7B00FF"
+                            BorderThickness="0,0,0,2"
+                            CornerRadius="8,8,0,0"
+                            Padding="12,8"
+                            Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="🔐  Account locked — try again in "
+                                       Foreground="#AA77FF"
+                                       FontFamily="Segoe UI"
+                                       FontSize="12"/>
+                            <TextBlock x:Name="TblCountdown"
+                                       Text="30s"
+                                       Foreground="#CC99FF"
+                                       FontFamily="Consolas"
+                                       FontSize="12"
+                                       FontWeight="Bold"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Footer -->
+                    <TextBlock HorizontalAlignment="Center"
+                               Margin="0,20,0,0">
+                        <Run Text="v2.0  ·  InventoryDBv3  ·  "
+                             Foreground="#1E3A5F"
+                             FontFamily="Consolas"
+                             FontSize="10"/>
+                        <Run Text="© 2025 IMS"
+                             Foreground="#1E3A5F"
+                             FontFamily="Consolas"
+                             FontSize="10"/>
+                    </TextBlock>
+
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,15 @@
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.csproj.AssemblyReference.cache
+C:\Users\zaroug\Desktop\testt\obj\Debug\MainWindow.baml
+C:\Users\zaroug\Desktop\testt\obj\Debug\MainWindow.g.cs
+C:\Users\zaroug\Desktop\testt\obj\Debug\App.g.cs
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt_MarkupCompile.cache
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.g.resources
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.Properties.Resources.resources
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.csproj.GenerateResource.cache
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.csproj.CoreCompileInputs.cache
+C:\Users\zaroug\Desktop\testt\bin\Debug\testt.exe.config
+C:\Users\zaroug\Desktop\testt\bin\Debug\testt.exe
+C:\Users\zaroug\Desktop\testt\bin\Debug\testt.pdb
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.exe
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.pdb
+C:\Users\zaroug\Desktop\testt\obj\Debug\testt.exe.config
